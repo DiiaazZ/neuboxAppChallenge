@@ -1,0 +1,14 @@
+{
+    "name": "daazz/taltere-app",
+    "type": "phpunit",
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "authors": [
+        {
+            "name": "Fernando Diaz Barrera",
+            "email": "fernanddaazz@gmail.com"
+        }
+    ],
+    "require": {}
+}
