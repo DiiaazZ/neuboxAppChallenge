@@ -1,55 +1,47 @@
 <?php
 class Challenge2{
-    function comprobarArchivo(string $ubicacionArchivo, string $nombreArchivo){
-        // COMPROBAR LA EXISTENCIA DE LA CARPETA CONTENEDORA, DE LO CONTRARIO CREARLA
-        if(!file_exists($ubicacionArchivo)){
-            mkdir($ubicacionArchivo);
-        }
-        // COMPROBAR LA EXISTENCIA DEL ARCHIVO "juego.txt", DE LO CONTRARIO CREARLO
-        if(!file_exists($ubicacionArchivo.$nombreArchivo)){
-            $file = fopen($ubicacionArchivo.$nombreArchivo, "w");
-            fwrite($file, '5'."\n");
-            fwrite($file, '140 82'."\n");
-            fwrite($file, '89 134'."\n");
-            fwrite($file, '90 110'."\n");
-            fwrite($file, '112 106'."\n");
-            fwrite($file, '88 90');
-            fclose($file);
+    function validarPath(string $pathJuego, string $salto){
+        // VALIDAR QUE EL ARCHIVO SEA UN ARCHIVO DE TEXTO
+        if(!file_exists($pathJuego)){
+            print($salto.'No existe la ruta: "'.$pathJuego.'", path incorrecto.'.$salto);
+            print($salto.'La entrada al programa debe ser un archivo de texto.'.$salto);
+            exit();
+        }else if(substr($pathJuego, -4) != '.txt' && substr($pathJuego, -4) != '.TXT'){
+            print($salto.'La entrada al programa debe ser un archivo de texto.'.$salto);
+            exit();
         }
     }
 
-    function validarRondas(int $rondas, $leyendoFichero){
+    function validarRondas(int $rondas, $leyendoFichero, string $salto){
         // VALIDANDO EL PRIMER VALOR, SI ES DE TIPO ENTERO
         if(!ctype_digit(trim($leyendoFichero[0]))){
-            echo '<br>'.'La estructura de la información es incorrecta, el número de rondas debe ser un número entero.'.'<br><br>';
+            echo $salto.'La estructura de la información es incorrecta, el número de rondas debe ser un número entero.'.$salto;
             exit();
         }else if($rondas == 0 || $rondas > 10000){ // VALIDANDO SI EL ENTERO SE ENCUENTRA ENTRE EL 0 Y EL 1000
-            echo '<br>'.'Estructura de la información incorrecta, las rondas debe ser mayor a 0 y menores a 10000.'.'<br><br>';
+            echo $salto.'Estructura de la información incorrecta, las rondas debe ser mayor a 0 y menores a 10000.'.$salto;
             exit();
         }else if($rondas != (count($leyendoFichero)-1)){ // VALIDANDO EL NUMERO DE RONDAS CON LA CANTIDAD DE DATOS POR RONDA
-            echo '<br>'.'Estructura de la información incorrecta, la cantidad de datos debe ser igual al número de rondas.'.'<br><br>';
+            echo $salto.'Estructura de la información incorrecta, la cantidad de datos debe ser igual al número de rondas.'.$salto;
             exit();
         }
     }
 
-    function resolverChallenge2(){
-        $ubicacionArchivo = 'juego/';
-        $nombreArchivo = 'juego.txt';
-
-        $this->comprobarArchivo($ubicacionArchivo, $nombreArchivo);
+    function resolverChallenge2(string $pathJuego, string $salto){
+        echo 'Validando Path .....'.$salto;
+        $this->validarPath($pathJuego, $salto);
 
         // LEYENDO ARCHIVO juego.txt ....
-        $leyendoFichero = file($ubicacionArchivo.$nombreArchivo);
+        $leyendoFichero = file($pathJuego);
         // COMPROBANDO LA CARGA DEL ARCHIVO EN EL ARRAY
         if($leyendoFichero != false){
-            echo '================ Leyendo el archivo "'.$ubicacionArchivo.$nombreArchivo.'" ....... ============='.'<br><br>';
-            echo 'Validando archivo .....'.'<br>';
+            echo '================ Leyendo el archivo "'.$pathJuego.'" ....... ============='.$salto;
+            echo 'Validando archivo .....'.$salto;
             
             // OBTENIENDO NUMERO DE RONDAS
             $rondas = intval(trim($leyendoFichero[0]));
 
             // VALIDAR RONDAS
-            $this->validarRondas($rondas, $leyendoFichero);
+            $this->validarRondas($rondas, $leyendoFichero, $salto);
             
             // RECORIENDO EL MARCADOR ==========================
             $arrayJuego = [];
@@ -59,20 +51,20 @@ class Challenge2{
 
                 // VALIDANDO INFORMACION DEL MARCADOR
                 if(count($arrayMarcador) > 2){
-                    echo '<br>'.'Estructura de la información incorrecta, los datos de cada ronda solo pueden ser de 2 jugadores.'.'<br><br>';
+                    echo $salto.'Estructura de la información incorrecta, los datos de cada ronda solo pueden ser de 2 jugadores.'.$salto;
                     exit();
                 }else if(count($arrayMarcador) < 2){
-                    echo '<br>'.'Estructura de la información incorrecta, los datos de cada ronda deben ser de los 2 jugadores.'.'<br><br>';
+                    echo $salto.'Estructura de la información incorrecta, los datos de cada ronda deben ser de los 2 jugadores.'.$salto;
                     exit();
                 }else if(!ctype_digit($arrayMarcador[0]) || !ctype_digit($arrayMarcador[1])){
-                    echo '<br>'.'Estructura de la información incorrecta, los datos de cada ronda deben ser dos números enteros separados por un espacio.'.'<br><br>';
+                    echo $salto.'Estructura de la información incorrecta, los datos de cada ronda deben ser dos números enteros separados por un espacio.'.$salto;
                     exit();
                 }
             }
-            echo 'Recoriendo Marcado .....'.'<br>';
+            echo 'Recoriendo Marcado .....'.$salto;
             
             // MOSTRANDO MARCADOR DEL JUEGO
-            echo '<br>'.'Mostrando marcador del juego .....'.'<br>';
+            echo $salto.'Mostrando marcador del juego .....'.$salto;
             ?>
             <table>
                 <thead>
@@ -104,7 +96,7 @@ class Challenge2{
             <?php
 
             // GENERANDO MARCADOR ACOMULADO Y VENTAJA OBTENIDA
-            echo 'Generando marcador acomulado .....'.'<br>';
+            echo 'Generando marcador acomulado .....'.$salto;
             $arrayMarcadorAcumulado = [];
             $puntosPorRondaJugador1 = 0;
             $puntosPorRondaJugador2 = 0;
@@ -132,7 +124,7 @@ class Challenge2{
             }
             
             // MOSTRANDO MARCADOR ACUMULADO
-            echo '<br>'.'Mostrando marcador acomulado .....'.'<br>';
+            echo $salto.'Mostrando marcador acomulado .....'.$salto;
             ?>
             <table>
                 <thead>
@@ -169,11 +161,12 @@ class Challenge2{
             1.- COMPROBAR LA EXISTENCIA DEL ARCHIVO, DE LO CONTRARIO CREARLO 
             2.- ESCRIBIR EL RESULTADO DE LAS INSTRUCCIONES
             */
+            $nombreArchivo = basename($pathJuego);
             $rutaSalida = 'resultadoJuegos/';
             if(!file_exists($rutaSalida)){
                 mkdir($rutaSalida);
             }
-            $file = fopen($rutaSalida.$nombreArchivo, "w");
+            $file = fopen($rutaSalida.'resultado_'.$nombreArchivo, "w");
             
             // ESCRIBIENDO ARCHIVO, CON EL RESULTADO DE LA MAYOR VENTAJA DE TODAS LA RONDAS
             $jugadorGanador = '';
@@ -189,13 +182,33 @@ class Challenge2{
             fwrite($file, $jugadorGanador.' '.$ventajaMayor);
 
             fclose($file);
-            echo '<br>'.'El resultado del juego, se encuentra en la ruta: "'.$rutaSalida.$nombreArchivo.'"<br><br>';
+            echo $salto.'El resultado del juego, se encuentra en la ruta: "'.$rutaSalida.'resultado_'.$nombreArchivo.'"<br><br>';
         }else{
-            echo '<br>'.'El archivo se encuentra vacío.'.'<br><br>';
+            echo $salto.'El archivo se encuentra vacío.'.$salto;
         }
     }
 }
 
-$challenge = new Challenge2;
-$challenge->resolverChallenge2();
+
+// VALIDANDO TIPO DE EJECUCION =================================
+if(!isset($_SERVER['HTTP_USER_AGENT'])){ // EJECUCION POR TERMINAL
+    $pathJuego = readline("Ingresa el PATH de la ubicacion del juego: ");
+    $salto = "\n";
+}else{ // EJECUCION POR NAVEGADOR
+    ?><form method="POST" action="challenge2.php">
+        <label>Ingresa el PATH de la ubicacion del juego: </label><br>
+        <input name="pathJuego" type="text" height="100" autocomplete="off" style="width: 50%;" required>
+        <button type="submit">Ejecutar</button>
+        <button type="button"><a href="../../">Salir</a></button>
+    </form><?php
+    if(isset($_POST['pathJuego'])) $pathJuego = $_POST['pathJuego'];
+    $salto = '<br>';
+}
+// ================================================================
+
+// INICIAR PROGRAMA
+if(isset($pathJuego)){
+    $challenge = new Challenge2;
+    $challenge->resolverChallenge2($pathJuego, $salto);
+}
 ?>
